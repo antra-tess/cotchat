@@ -1,4 +1,4 @@
-# CLIChat
+# COTChat
 
 A streamlined CLI chat interface designed for DeepSeek models, with support for reasoning traces and streaming responses.
 
