@@ -15,7 +15,7 @@ A streamlined CLI chat interface designed for DeepSeek models, with support for 
 Clone into a local directory:
 
 ```bash
-git clone https://
+git clone https://github.com/antra-tess/cotchat
 ```
 
 Install as editable package:
