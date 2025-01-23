@@ -15,3 +15,10 @@ Install as editable package:
 ```bash
 pip install -e .
 ```
+
+Start:
+```bash
+cotchat
+```
+
+Keep in mind that OpenRouter currently does not support reasining traces, use DeepSeek API directly.
