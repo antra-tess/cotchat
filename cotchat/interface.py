@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import warnings
+from tabnanny import verbose
+
 # Suppress pydantic warning about config keys
 warnings.filterwarnings('ignore', message='Valid config keys have changed in V2')
 
@@ -12,6 +14,7 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
 import os
 from dotenv import load_dotenv
+
 from litellm import completion
 import sys
 from typing import List, Dict
@@ -38,7 +41,8 @@ from pathlib import Path
 # Load environment variables
 config_dir = Path(user_config_dir("cotchat"))
 env_path = config_dir / ".env"
-load_dotenv(env_path)
+print(f"Loading environment variables from {env_path}")
+load_dotenv(env_path, verbose=True)
 
 # Initialize Rich console
 console = Console()
@@ -86,6 +90,8 @@ class ChatInterface:
         self.console = Console()
         # Make streaming configurable through environment variable
         self.streaming = os.getenv("ENABLE_STREAMING", "true").lower() == "true"
+        # Add reasoning context mode configuration
+        self.use_reasoning_context = os.getenv("USE_REASONING_CONTEXT", "false").lower() == "true"
         
         # Initialize OpenAI client with configurable endpoint
         self.client = OpenAI(
@@ -282,8 +288,15 @@ class ChatInterface:
                         while not self.response_queue.empty():
                             self.response_queue.get()
                         
+                        # Build messages list using reasoning content if enabled
+                        messages = []
+                        for m in self.messages[:-1]:
+                            if self.use_reasoning_context and m.reasoning_content is not None:
+                                messages.append({"role": m.role, "content": m.reasoning_content})
+                            else:
+                                messages.append({"role": m.role, "content": m.content})
+                        print("Request", messages)
                         # Start streaming process
-                        messages = [{"role": m.role, "content": m.content} for m in self.messages[:-1]]
                         process = Process(
                             target=ChatGenerator.stream_in_process,
                             args=(messages, self.model, self.api_key, self.api_base, 
@@ -436,6 +449,7 @@ class ChatInterface:
 
         console.print("[yellow]Chat Interface Started[/]")
         console.print(f"[blue]Streaming mode: {'enabled' if self.streaming else 'disabled'}[/]")
+        console.print(f"[blue]Using reasoning context: {'enabled' if self.use_reasoning_context else 'disabled'}[/]")
         console.print("Press Ctrl+R to regenerate last response")
         console.print("Press Ctrl+E to edit your last message")
         console.print("Press Ctrl+S to save chat")

@@ -21,5 +21,5 @@ Start:
 cotchat
 ```
 
-Keep in mind that OpenRouter currently does not support reasining traces, use DeepSeek API directly.
+OpenRouter now supports reasoning traces. You can still use DeepSeek if you prefer.
 

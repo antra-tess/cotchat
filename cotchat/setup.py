@@ -21,7 +21,7 @@ def setup_environment():
     session = PromptSession()
     
     # Display info with rich, but use plain text for prompt
-    console.print("[blue]Would you like to use DeepSeek? (OpenRouter does not support reasoning traces as of Jan 22)")
+    console.print("[blue]Would you like to use DeepSeek?")
     console.print("Select 'no' to use OpenRouter instead")
     use_deepseek = confirm("Use DeepSeek?")
     
