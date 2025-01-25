@@ -295,7 +295,7 @@ class ChatInterface:
                                 messages.append({"role": m.role, "content": m.reasoning_content})
                             else:
                                 messages.append({"role": m.role, "content": m.content})
-                        print("Request", messages)
+                        #print("Request", messages)
                         # Start streaming process
                         process = Process(
                             target=ChatGenerator.stream_in_process,
